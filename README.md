@@ -7,3 +7,5 @@ It basically works like Firefox Send. You select a file, it gets encrypted local
 Try it here: https://vup.hns.siasky.net/
 
 Example file (sia.pdf): https://vup.hns.siasky.net/#47-XAAhhqabyCHIK1JeAMIoEhmSFMATBiPmgitYOoXgTkFEcw+w1caGiDA6bRp7l0mOzxUv+f+//xMHAJgxQt1R0gLPq7AOlhIkUoljkrmHNVXNzj4
+
+Disclaimer: The encryption process is not yet audited, so please don't upload sensitive files yet.
