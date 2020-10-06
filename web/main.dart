@@ -194,8 +194,9 @@ Stream<List<int>> encryptStreamInBlocks(Stream<List<int>> source,
   int internalI = 0;
   // Wait until a new chunk is available, then process it.
   await for (var chunk in source) {
+    print('crypt $internalI');
     internalI++;
-    while (i < internalI - 1) {
+    while (i < internalI - 3) {
       await Future.delayed(Duration(milliseconds: 20));
     }
     yield await cipher.encrypt(
@@ -288,11 +289,37 @@ Future<List<String>> uploadChunkedStreamToSkynet(
   setState(
       'Encrypting and uploading first chunk... $totalChunks Chunks total (16 MB each)');
 
-  List<String> skylinks = [];
+  List<String> skylinks = List.generate(totalChunks, (index) => null);
+
+  _uploadChunk(final Uint8List chunk, final int currentI) async {
+    String skylink;
+
+    print('up $currentI');
+
+    while (skylink == null) {
+      try {
+        skylink = await uploadFileToSkynet(chunk);
+
+        if ((skylink ?? '').isEmpty) throw Exception('oops');
+      } catch (e, st) {
+        print(e);
+        print(st);
+        print('retry');
+      }
+    }
+
+    skylinks[currentI] = skylink;
+    i++;
+    setState(
+        'Encrypting and uploading file... $i/$totalChunks Chunks uploaded (16 MB each)');
+  }
+
+  int internalI = 0;
 
   // TODO Parallel chunk uploading to multiple portals
   await for (final chunk in byteUploadStream) {
-    String skylink;
+    print('chunk $internalI');
+/*     String skylink;
 
     while (skylink == null) {
       try {
@@ -307,10 +334,27 @@ Future<List<String>> uploadChunkedStreamToSkynet(
     }
 
     skylinks.add(skylink);
-    i++;
+    i++; */
 
-    setState(
-        'Encrypting and uploading file... $i/$totalChunks Chunks uploaded (16 MB each)');
+    _uploadChunk(chunk, internalI);
+
+    while (i < internalI - 2) {
+      await Future.delayed(Duration(milliseconds: 20));
+    }
+    internalI++;
+  }
+
+  while (true) {
+    await Future.delayed(Duration(milliseconds: 20));
+    bool notASingleNull = true;
+
+    for (final val in skylinks) {
+      if (val == null) {
+        notASingleNull = false;
+        break;
+      }
+    }
+    if (notASingleNull) break;
   }
   return skylinks;
 }
