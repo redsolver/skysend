@@ -3,6 +3,7 @@ import 'dart:html';
 import 'dart:math';
 import 'dart:typed_data';
 import 'package:cryptography/cryptography.dart';
+import 'package:filesize/filesize.dart';
 
 import 'package:http/http.dart' as http;
 
@@ -44,6 +45,13 @@ void main() {
     final lengthSep = hash.indexOf('-');
 
     final version = hash.substring(0, lengthSep);
+    if (version == 'a') {
+      setState('Redirecting to old version...');
+
+      window.location.href =
+          'https://siasky.net/CADnRQe4AztQnaDkwPaBP6G3vofZzYaaikE5246uZadXiQ/index.html#$hash';
+      return;
+    }
 
     hash = hash.substring(lengthSep + 1);
 
@@ -140,41 +148,61 @@ void downloadAndDecrypt(
   int i = 0;
 
   final int totalChunks = metadata['totalchunks'];
-  setState('Downloading and decrypting chunk 1 of $totalChunks...');
+
+  final size = filesize(metadata['filesize']);
+
+  final info = '${metadata["filename"]} ($size) •';
+
+  setState('$info Downloading and decrypting chunk 1 of $totalChunks...');
+
+  int iDone = 0;
 
   for (final chunkSkylink in chunkIndex['chunks']) {
-    i++;
-
     final currentI = i;
+
+    print('dl $currentI');
+
+    final chunkNonce = Nonce(
+        base64.decode(chunkIndex['chunkNonces'][(currentI + 1).toString()]));
 
     http
         .get(
       '$portal/$chunkSkylink',
     )
         .then((chunkRes) async {
+      print('dcrypt $currentI');
+
       final decryptedChunk = await cipher.decrypt(
         chunkRes.bodyBytes,
         secretKey: secretKey,
-        nonce: nonce,
+        nonce: chunkNonce,
       );
 
-      while (chunks.length < currentI - 1) {
+      while (chunks.length != currentI) {
         await Future.delayed(Duration(milliseconds: 20));
       }
+      print('done $currentI');
 
       chunks.add(decryptedChunk);
 
-      if (currentI == totalChunks) {
+      if (currentI == totalChunks - 1) {
         final blob = Blob(chunks, metadata['type']);
 
         downloadBlob(blob, metadata['filename']);
       } else {
         setState(
-            'Downloading and decrypting chunk ${currentI + 1} of $totalChunks...');
+            '$info Downloading and decrypting chunk ${currentI + 2} of $totalChunks...');
       }
+      iDone++;
     });
 
     await Future.delayed(Duration(seconds: 1));
+
+    while (i < iDone - 4) {
+      await Future.delayed(Duration(milliseconds: 20));
+    }
+
+    i++;
   }
 }
 
@@ -188,10 +216,15 @@ void downloadBlob(Blob blob, String filename) {
 
 int i = 0;
 
+Map<String, String> chunkNonces = {};
+
 Stream<List<int>> encryptStreamInBlocks(Stream<List<int>> source,
-    CipherWithAppendedMac cipher, SecretKey secretKey, Nonce nonce) async* {
+    CipherWithAppendedMac cipher, SecretKey secretKey) async* {
   i = 0;
   int internalI = 0;
+
+  chunkNonces = {};
+
   // Wait until a new chunk is available, then process it.
   await for (var chunk in source) {
     print('crypt $internalI');
@@ -199,10 +232,14 @@ Stream<List<int>> encryptStreamInBlocks(Stream<List<int>> source,
     while (i < internalI - 3) {
       await Future.delayed(Duration(milliseconds: 20));
     }
+
+    final chunkNonce = Nonce.randomBytes(16);
+    chunkNonces[internalI.toString()] = base64.encode(chunkNonce.bytes);
+
     yield await cipher.encrypt(
       chunk,
       secretKey: secretKey,
-      nonce: nonce,
+      nonce: chunkNonce,
     );
   }
   print('done');
@@ -231,6 +268,7 @@ void encryptAndUpload(
     'type': file.type,
     'chunksize': chunkSize,
     'totalchunks': totalChunks,
+    'filesize': file.size,
   };
 
 /*   final md = json.encode(metadata);
@@ -242,7 +280,7 @@ void encryptAndUpload(
   // Metadata start (mdL + 32)
 
   final stream =
-      encryptStreamInBlocks(getStreamOfFile(file), cipher, secretKey, nonce);
+      encryptStreamInBlocks(getStreamOfFile(file), cipher, secretKey);
 
   final chunkSkylinks = await uploadChunkedStreamToSkynet(
       file.size, stream /* .asBroadcastStream() */
@@ -256,6 +294,7 @@ void encryptAndUpload(
   final links = await cipher.encrypt(
     utf8.encode(json.encode({
       'chunks': chunkSkylinks,
+      'chunkNonces': chunkNonces,
       'metadata': metadata,
     })),
     secretKey: secretKey,
@@ -270,7 +309,7 @@ void encryptAndUpload(
       base64.encode([...(await secretKey.extract()), ...nonce.bytes]);
 
   final link =
-      '${window.location.protocol}//${window.location.host}${window.location.pathname}#a-$skylink+$secret';
+      '${window.location.protocol}//${window.location.host}${window.location.pathname}#b-$skylink+$secret';
 
   setState('Secure Download Link for ${file.name}: <a href="$link">$link</a>');
 }
