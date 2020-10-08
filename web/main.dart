@@ -178,7 +178,7 @@ void downloadAndDecrypt(
         nonce: chunkNonce,
       );
 
-      while (chunks.length != currentI) {
+      while (chunks.length < currentI) {
         await Future.delayed(Duration(milliseconds: 20));
       }
       print('done $currentI');
@@ -196,9 +196,9 @@ void downloadAndDecrypt(
       iDone++;
     });
 
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(Duration(milliseconds: 100));
 
-    while (i < iDone - 4) {
+    while (i > iDone + 4) {
       await Future.delayed(Duration(milliseconds: 20));
     }
 
