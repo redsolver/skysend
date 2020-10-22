@@ -1,26 +1,163 @@
-<!DOCTYPE html>
-
-<html>
+<!doctype html>
+<html lang="en">
 
 <head>
+
+
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Skynet Send</title>
-  <link rel="stylesheet" href="styles.css">
-  <link rel="icon" href="favicon.ico">
+  <meta name="description" content="A fully decentralized way to send and share secure, private files">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="resources/css/style.css">
+  <link href="resources/css/font.css" rel="stylesheet">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="resources/icon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="resources/icon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="resources/icon/favicon-16x16.png">
+  <link rel="manifest" href="site.webmanifest">
+
   <script defer src="main.dart.js"></script>
 </head>
 
 <body>
-  <h1>Skynet Send v2.2</h1>
-  <p>Select a file to encrypt and upload it to <a href="https://siasky.net">Sia Skynet</a>. The generated link then can
-    be used to securely download it. Source Code: <a
-      href="https://github.com/redsolver/skynet-send">https://github.com/redsolver/skynet-send</a></p>
-  <input type="file" id="fileselect">
 
-  <div id="output"></div>
+  <div class="header">
+    <div class="logo">
+      <a href="/"><img src="resources/images/logo-skynetsend.svg" alt="Logo Skynet Send"></a>
+    </div>
 
+    <div class="version">
+      <span>v3.0</span>
+    </div>
+  </div>
+
+  <section class="content-container">
+    <div class="flex-row">
+      <div class="flex-grid-50">
+        <div class="instructions" id="instructions-upload">
+          <h3><img src="resources/images/icon-upload.svg" alt="Icon upload">Upload and share a file</h3>
+
+
+          <p id="upload-instruction">Select a file to encrypt and upload it to Sia Skynet. The generated link then can
+            be used to securely
+            download it.</p>
+
+        </div>
+
+        <div class="instructions" id="instructions-download" style="display: none;">
+          <h3><img src="resources/images/icon-download.svg" alt="Icon download">Download shared file</h3>
+          <h4>Ready for download</h4>
+          <p>Your secure download link for <strong id="download-filename">...</strong></p>
+        </div>
+
+        <div class="download-section" style="display: none;">
+          <div class="download-file-background">
+            <div class="download-file">
+              <span id="download-status"><a style="cursor: pointer;"><img src="resources/images/icon-download-link.svg"
+                    alt="Download link icon">Download
+                  file</a></span>
+              <!--   <a href="" class="copy-click" data-copy-string="#ITN12345"
+                data-tooltip-text-copied="✔ Copied to clipboard">
+                Copy link
+              </a> -->
+            </div>
+
+            <div class="file-name">
+              <span id="download-btn-filename">...</span>
+            </div>
+          </div>
+
+          <div class="new-upload">
+            <a href="/">Upload a new file</a>
+          </div>
+        </div>
+
+        <div class="upload-section-done" style="display: none;">
+          <h4>Ready for download!</h4>
+          <p>Copy and share the secure download link for <strong id="upload-filename">add-circle-outline.svg</strong>
+          </p>
+
+          <div class="upload-link-element" style="display: flex; margin-top: 24px;">
+            <div class="share-link-background" style="min-width: 0px;">
+              <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+                id="upload-link">https://vup.hns.siasky.net/#b-AADVk1NVkWCB4Q1DCJbitLOmjY8R2DFJKL</span>
+            </div>
+            <div class="copy-cta-button" id="copy-button" style="flex-basis: 20px">
+              <a id="copy-btn" class="btn"
+                style="display: block; width: 20px; box-shadow: none; -webkit-box-shadow: none;"><img
+                  src="resources/images/icon-copy.svg" alt="Icon copy"></a>
+            </div>
+          </div>
+
+          <div class="new-upload">
+            <a href="/">Upload a new file</a>
+          </div>
+        </div>
+
+
+
+        <div class="upload-section">
+          <div class="upload-cta">
+            <div class="upload-cta-span">
+              <span>Drop your file here to upload</span>
+            </div>
+            <div class="upload-cta-button" id="upload-button">
+              <a class="btn" id="upload-btn"><img src="resources/images/icon-folder.svg"
+                  alt="Icon upload"><span>Browse</span></a>
+            </div>
+          </div>
+        </div>
+
+        <div class="upload-section-active" style="display: none;">
+          <div class="upload-cta">
+            <div class="uploading-span">
+              <span>Encrypting and uploading file...</span>
+            </div>
+          </div>
+        </div>
+
+
+
+        <div class="upload-maximum">
+          <span>Maximum file size 8 Gigabyte (8000 MB)</span>
+        </div>
+
+      </div>
+
+
+      <div class="extra-spacing"></div>
+
+
+      <div class="flex-grid-50">
+        <div class="introduction">
+          <h1>Decentralized file transfer</h1>
+          <h2>An open source, highly secure, private and decentralized way to send and share your files.</h2>
+
+
+          <p>When you select a file, it gets split into 16 MB chunks. Every chunk is encrypted with strong AES-256
+            encryption and uploaded to <a href="https://siasky.net">Sia Skynet</a>.
+            The chunk references as well as the metadata are saved in a final index file which is also encrypted and
+            uploaded.
+          </p>
+
+
+          <p>Note: The encryption process has not yet been audited, so please don't upload sensitive files.</p>
+          <span><a href="https://github.com/redsolver/skynet-send" target="_blank">Source Code on
+              GitHub</a><img src="resources/images/icon-arrow.svg" alt="Icon arrow"></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>Skynet Send v3.0, made by <a href="https://github.com/redsolver" target="_blank">redsolver</a>, UI design by
+      <a href="https://twitter.com/deGraafJulian" target="_blank">@Julian</a></span>
+  </footer>
+  <input type="file" id="fileselect" hidden>
+
+  <a id="downloadLink" hidden></a>
 </body>
 
 </html>

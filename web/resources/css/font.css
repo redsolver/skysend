@@ -1,0 +1,163 @@
+@font-face {
+	font-family: 'Barlow';
+	font-style: normal;
+	font-weight: 300;
+	src:
+		local('Barlow Light'),
+		local('Barlow-Light'),
+		/* from https://fonts.gstatic.com/s/barlow/v5/7cHqv4kjgoGqM7E3p-ks51os.woff2 */
+		url('/resources/font/Barlow_300.woff2') format('woff2'),
+		/* from https://fonts.gstatic.com/s/barlow/v5/7cHqv4kjgoGqM7E3p-ks51oq.woff */
+		url('/resources/font/Barlow_300.woff') format('woff'),
+		/* from https://fonts.gstatic.com/s/barlow/v5/7cHqv4kjgoGqM7E3p-ks51oo.eot */
+		url('/resources/font/Barlow_300.eot?#iefix') format('embedded-opentype'),
+		/* from https://fonts.gstatic.com/l/font?kit=7cHqv4kjgoGqM7E3p-ks51or&skey=5c2bca46e72f5b37&v=v5#Barlow */
+		url('/resources/font/Barlow_300.svg#Barlow') format('svg'),
+		/* from https://fonts.gstatic.com/s/barlow/v5/7cHqv4kjgoGqM7E3p-ks51op.ttf */
+		url('/resources/font/Barlow_300.ttf') format('truetype');
+}
+@font-face {
+	font-family: 'Barlow';
+	font-style: normal;
+	font-weight: 400;
+	src:
+		local('Barlow Regular'),
+		local('Barlow-Regular'),
+		/* from https://fonts.gstatic.com/s/barlow/v5/7cHpv4kjgoGqM7E_DMs5.woff2 */
+		url('/resources/font/Barlow_400.woff2') format('woff2'),
+		/* from https://fonts.gstatic.com/s/barlow/v5/7cHpv4kjgoGqM7E_DMs_.woff */
+		url('/resources/font/Barlow_400.woff') format('woff'),
+		/* from https://fonts.gstatic.com/s/barlow/v5/7cHpv4kjgoGqM7E_DMs9.eot */
+		url('/resources/font/Barlow_400.eot?#iefix') format('embedded-opentype'),
+		/* from https://fonts.gstatic.com/l/font?kit=7cHpv4kjgoGqM7E_DMs-&skey=32d7acf8757dbad0&v=v5#Barlow */
+		url('/resources/font/Barlow_400.svg#Barlow') format('svg'),
+		/* from https://fonts.gstatic.com/s/barlow/v5/7cHpv4kjgoGqM7E_DMs8.ttf */
+		url('/resources/font/Barlow_400.ttf') format('truetype');
+}
+@font-face {
+	font-family: 'Barlow';
+	font-style: normal;
+	font-weight: 500;
+	src:
+		local('Barlow Medium'),
+		local('Barlow-Medium'),
+		/* from https://fonts.gstatic.com/s/barlow/v5/7cHqv4kjgoGqM7E3_-gs51os.woff2 */
+		url('/resources/font/Barlow_500.woff2') format('woff2'),
+		/* from https://fonts.gstatic.com/s/barlow/v5/7cHqv4kjgoGqM7E3_-gs51oq.woff */
+		url('/resources/font/Barlow_500.woff') format('woff'),
+		/* from https://fonts.gstatic.com/s/barlow/v5/7cHqv4kjgoGqM7E3_-gs51oo.eot */
+		url('/resources/font/Barlow_500.eot?#iefix') format('embedded-opentype'),
+		/* from https://fonts.gstatic.com/l/font?kit=7cHqv4kjgoGqM7E3_-gs51or&skey=4c8d0d0b13516148&v=v5#Barlow */
+		url('/resources/font/Barlow_500.svg#Barlow') format('svg'),
+		/* from https://fonts.gstatic.com/s/barlow/v5/7cHqv4kjgoGqM7E3_-gs51op.ttf */
+		url('/resources/font/Barlow_500.ttf') format('truetype');
+}
+@font-face {
+	font-family: 'Barlow';
+	font-style: normal;
+	font-weight: 700;
+	src:
+		local('Barlow Bold'),
+		local('Barlow-Bold'),
+		/* from https://fonts.gstatic.com/s/barlow/v5/7cHqv4kjgoGqM7E3t-4s51os.woff2 */
+		url('/resources/font/Barlow_700.woff2') format('woff2'),
+		/* from https://fonts.gstatic.com/s/barlow/v5/7cHqv4kjgoGqM7E3t-4s51oq.woff */
+		url('/resources/font/Barlow_700.woff') format('woff'),
+		/* from https://fonts.gstatic.com/s/barlow/v5/7cHqv4kjgoGqM7E3t-4s51oo.eot */
+		url('/resources/font/Barlow_700.eot?#iefix') format('embedded-opentype'),
+		/* from https://fonts.gstatic.com/l/font?kit=7cHqv4kjgoGqM7E3t-4s51or&skey=f60e73b1bbf362f3&v=v5#Barlow */
+		url('/resources/font/Barlow_700.svg#Barlow') format('svg'),
+		/* from https://fonts.gstatic.com/s/barlow/v5/7cHqv4kjgoGqM7E3t-4s51op.ttf */
+		url('/resources/font/Barlow_700.ttf') format('truetype');
+}
+@font-face {
+	font-family: 'Barlow';
+	font-style: normal;
+	font-weight: 900;
+	src:
+		local('Barlow Black'),
+		local('Barlow-Black'),
+		/* from https://fonts.gstatic.com/s/barlow/v5/7cHqv4kjgoGqM7E3j-ws51os.woff2 */
+		url('/resources/font/Barlow_900.woff2') format('woff2'),
+		/* from https://fonts.gstatic.com/s/barlow/v5/7cHqv4kjgoGqM7E3j-ws51oq.woff */
+		url('/resources/font/Barlow_900.woff') format('woff'),
+		/* from https://fonts.gstatic.com/s/barlow/v5/7cHqv4kjgoGqM7E3j-ws51oo.eot */
+		url('/resources/font/Barlow_900.eot?#iefix') format('embedded-opentype'),
+		/* from https://fonts.gstatic.com/l/font?kit=7cHqv4kjgoGqM7E3j-ws51or&skey=ed2d519ec0625a7a&v=v5#Barlow */
+		url('/resources/font/Barlow_900.svg#Barlow') format('svg'),
+		/* from https://fonts.gstatic.com/s/barlow/v5/7cHqv4kjgoGqM7E3j-ws51op.ttf */
+		url('/resources/font/Barlow_900.ttf') format('truetype');
+}
+
+@font-face {
+	font-family: 'Roboto';
+	font-style: normal;
+	font-weight: 300;
+	src:
+		local('Roboto Light'),
+		local('Roboto-Light'),
+		/* from https://fonts.gstatic.com/s/roboto/v20/KFOlCnqEu92Fr1MmSU5fBBc4.woff2 */
+		url('/resources/font/Roboto_300.woff2') format('woff2'),
+		/* from https://fonts.gstatic.com/s/roboto/v20/KFOlCnqEu92Fr1MmSU5fBBc-.woff */
+		url('/resources/font/Roboto_300.woff') format('woff'),
+		/* from https://fonts.gstatic.com/s/roboto/v20/KFOlCnqEu92Fr1MmSU5fBBc8.eot */
+		url('/resources/font/Roboto_300.eot?#iefix') format('embedded-opentype'),
+		/* from https://fonts.gstatic.com/l/font?kit=KFOlCnqEu92Fr1MmSU5fBBc_&skey=11ce8ad5f54705ca&v=v20#Roboto */
+		url('/resources/font/Roboto_300.svg#Roboto') format('svg'),
+		/* from https://fonts.gstatic.com/s/roboto/v20/KFOlCnqEu92Fr1MmSU5fBBc9.ttf */
+		url('/resources/font/Roboto_300.ttf') format('truetype');
+}
+@font-face {
+	font-family: 'Roboto';
+	font-style: normal;
+	font-weight: 400;
+	src:
+		local('Roboto'),
+		local('Roboto-Regular'),
+		/* from https://fonts.gstatic.com/s/roboto/v20/KFOmCnqEu92Fr1Mu4mxK.woff2 */
+		url('/resources/font/Roboto_400.woff2') format('woff2'),
+		/* from https://fonts.gstatic.com/s/roboto/v20/KFOmCnqEu92Fr1Mu4mxM.woff */
+		url('/resources/font/Roboto_400.woff') format('woff'),
+		/* from https://fonts.gstatic.com/s/roboto/v20/KFOmCnqEu92Fr1Mu4mxO.eot */
+		url('/resources/font/Roboto_400.eot?#iefix') format('embedded-opentype'),
+		/* from https://fonts.gstatic.com/l/font?kit=KFOmCnqEu92Fr1Mu4mxN&skey=a0a0114a1dcab3ac&v=v20#Roboto */
+		url('/resources/font/Roboto_400.svg#Roboto') format('svg'),
+		/* from https://fonts.gstatic.com/s/roboto/v20/KFOmCnqEu92Fr1Mu4mxP.ttf */
+		url('/resources/font/Roboto_400.ttf') format('truetype');
+}
+@font-face {
+	font-family: 'Roboto';
+	font-style: normal;
+	font-weight: 500;
+	src:
+		local('Roboto Medium'),
+		local('Roboto-Medium'),
+		/* from https://fonts.gstatic.com/s/roboto/v20/KFOlCnqEu92Fr1MmEU9fBBc4.woff2 */
+		url('/resources/font/Roboto_500.woff2') format('woff2'),
+		/* from https://fonts.gstatic.com/s/roboto/v20/KFOlCnqEu92Fr1MmEU9fBBc-.woff */
+		url('/resources/font/Roboto_500.woff') format('woff'),
+		/* from https://fonts.gstatic.com/s/roboto/v20/KFOlCnqEu92Fr1MmEU9fBBc8.eot */
+		url('/resources/font/Roboto_500.eot?#iefix') format('embedded-opentype'),
+		/* from https://fonts.gstatic.com/l/font?kit=KFOlCnqEu92Fr1MmEU9fBBc_&skey=ee881451c540fdec&v=v20#Roboto */
+		url('/resources/font/Roboto_500.svg#Roboto') format('svg'),
+		/* from https://fonts.gstatic.com/s/roboto/v20/KFOlCnqEu92Fr1MmEU9fBBc9.ttf */
+		url('/resources/font/Roboto_500.ttf') format('truetype');
+}
+@font-face {
+	font-family: 'Roboto';
+	font-style: normal;
+	font-weight: 700;
+	src:
+		local('Roboto Bold'),
+		local('Roboto-Bold'),
+		/* from https://fonts.gstatic.com/s/roboto/v20/KFOlCnqEu92Fr1MmWUlfBBc4.woff2 */
+		url('/resources/font/Roboto_700.woff2') format('woff2'),
+		/* from https://fonts.gstatic.com/s/roboto/v20/KFOlCnqEu92Fr1MmWUlfBBc-.woff */
+		url('/resources/font/Roboto_700.woff') format('woff'),
+		/* from https://fonts.gstatic.com/s/roboto/v20/KFOlCnqEu92Fr1MmWUlfBBc8.eot */
+		url('/resources/font/Roboto_700.eot?#iefix') format('embedded-opentype'),
+		/* from https://fonts.gstatic.com/l/font?kit=KFOlCnqEu92Fr1MmWUlfBBc_&skey=c06e7213f788649e&v=v20#Roboto */
+		url('/resources/font/Roboto_700.svg#Roboto') format('svg'),
+		/* from https://fonts.gstatic.com/s/roboto/v20/KFOlCnqEu92Fr1MmWUlfBBc9.ttf */
+		url('/resources/font/Roboto_700.ttf') format('truetype');
+}

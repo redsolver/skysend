@@ -40,7 +40,7 @@ void main() {
     }
 
     // hash = hash.substring(1);
-    setState('Downloading file index...');
+    // setState('Downloading file index...');
 
     final lengthSep = hash.indexOf('-');
 
@@ -73,6 +73,26 @@ void main() {
   FileUploadInputElement fileselect =
       window.document.querySelector('#fileselect');
 
+  querySelector('.upload-section').onDrop.listen((event) {
+    event.preventDefault();
+
+    final item = event.dataTransfer.items[0];
+
+    if (item.kind != 'file') return;
+
+    encryptAndUpload(
+      item.getAsFile(),
+    );
+  });
+
+  querySelector('.upload-section').onDragOver.listen((event) {
+    event.preventDefault();
+  });
+
+  querySelector('#upload-btn').onClick.listen((event) {
+    fileselect.click();
+  });
+
   fileselect.addEventListener("change", (e) {
     FileList files = fileselect.files;
     if (files.length < 1) throw Exception(); // TODO
@@ -102,8 +122,15 @@ Stream<List<int>> getStreamOfFile(File file) async* {
   }
 }
 
+void setDLState(String s) {
+  querySelector('#download-status').setInnerHtml(
+      '<span><img src="resources/images/icon-download-link.svg" alt="Download link icon">$s</span>',
+      validator: TrustedNodeValidator());
+}
+
 void setState(String s) {
-  querySelector('#output').setInnerHtml(s, validator: TrustedNodeValidator());
+  querySelector('.uploading-span')
+      .setInnerHtml('<span>$s</span>', validator: TrustedNodeValidator());
 }
 
 class TrustedNodeValidator implements NodeValidator {
@@ -117,6 +144,11 @@ void downloadAndDecrypt(
 ) async {
   print(skylink);
 
+  querySelector('.upload-section').style.display = 'none';
+  querySelector('#instructions-upload').style.display = 'none';
+  querySelector('.download-section').style.display = '';
+  querySelector('#instructions-download').style.display = '';
+
   final portal = 'https://siasky.net';
 
   final res = await http.get('$portal/$skylink');
@@ -128,8 +160,6 @@ void downloadAndDecrypt(
   final secretKey = SecretKey(cryptParts.sublist(0, 32));
 
   final nonce = Nonce(cryptParts.sublist(32, 32 + 16));
-
-  setState('Decrypting file index...');
 
   final decryptedChunkIndex = await cipher.decrypt(
     res.bodyBytes,
@@ -149,69 +179,85 @@ void downloadAndDecrypt(
 
   final int totalChunks = metadata['totalchunks'];
 
+  querySelector('#download-filename').setInnerHtml('${metadata["filename"]}');
+
   final size = filesize(metadata['filesize']);
 
-  final info = '${metadata["filename"]} ($size) •';
+  querySelector('#download-btn-filename')
+      .setInnerHtml('${metadata["filename"]} ($size)');
 
-  setState('$info Downloading and decrypting chunk 1 of $totalChunks...');
+  bool clicked = false;
+  querySelector('.download-file').onClick.listen((event) async {
+    if (!clicked) {
+      clicked = true;
 
-  int iDone = 0;
+      //   querySelector('.upload-section-active').style.display = '';
 
-  for (final chunkSkylink in chunkIndex['chunks']) {
-    final currentI = i;
+      setDLState('Downloading and decrypting chunk 1 of $totalChunks...');
 
-    print('dl $currentI');
+      int iDone = 0;
 
-    final chunkNonce = Nonce(
-        base64.decode(chunkIndex['chunkNonces'][(currentI + 1).toString()]));
+      for (final chunkSkylink in chunkIndex['chunks']) {
+        final currentI = i;
 
-    http
-        .get(
-      '$portal/$chunkSkylink',
-    )
-        .then((chunkRes) async {
-      print('dcrypt $currentI');
+        print('dl $currentI');
 
-      final decryptedChunk = await cipher.decrypt(
-        chunkRes.bodyBytes,
-        secretKey: secretKey,
-        nonce: chunkNonce,
-      );
+        final chunkNonce = Nonce(base64
+            .decode(chunkIndex['chunkNonces'][(currentI + 1).toString()]));
 
-      while (chunks.length < currentI) {
-        await Future.delayed(Duration(milliseconds: 20));
+        http
+            .get(
+          '$portal/$chunkSkylink',
+        )
+            .then((chunkRes) async {
+          print('dcrypt $currentI');
+
+          final decryptedChunk = await cipher.decrypt(
+            chunkRes.bodyBytes,
+            secretKey: secretKey,
+            nonce: chunkNonce,
+          );
+
+          while (chunks.length < currentI) {
+            await Future.delayed(Duration(milliseconds: 20));
+          }
+          print('done $currentI');
+
+          chunks.add(decryptedChunk);
+
+          if (currentI == totalChunks - 1) {
+            final blob = Blob(chunks, metadata['type']);
+
+            downloadBlob(blob, metadata['filename']);
+          } else {
+            setDLState(
+                'Downloading and decrypting chunk ${currentI + 2} of $totalChunks...');
+          }
+          iDone++;
+        });
+
+        await Future.delayed(Duration(milliseconds: 100));
+
+        while (i > iDone + 4) {
+          await Future.delayed(Duration(milliseconds: 20));
+        }
+
+        i++;
       }
-      print('done $currentI');
-
-      chunks.add(decryptedChunk);
-
-      if (currentI == totalChunks - 1) {
-        final blob = Blob(chunks, metadata['type']);
-
-        downloadBlob(blob, metadata['filename']);
-      } else {
-        setState(
-            '$info Downloading and decrypting chunk ${currentI + 2} of $totalChunks...');
-      }
-      iDone++;
-    });
-
-    await Future.delayed(Duration(milliseconds: 100));
-
-    while (i > iDone + 4) {
-      await Future.delayed(Duration(milliseconds: 20));
     }
+  });
 
-    i++;
-  }
+  return;
 }
 
 void downloadBlob(Blob blob, String filename) {
-  setState('<a id="downloadLink">Save File ${filename}</a>');
+  setDLState('Saving file...');
 
   window.document.querySelector("#downloadLink")
     ..setAttribute('href', Url.createObjectUrlFromBlob(blob))
     ..setAttribute('download', filename);
+
+  window.document.querySelector("#downloadLink").click();
 }
 
 int i = 0;
@@ -248,6 +294,9 @@ Stream<List<int>> encryptStreamInBlocks(Stream<List<int>> source,
 void encryptAndUpload(
   File file,
 ) async {
+  querySelector('.upload-section').style.display = 'none';
+  querySelector('.upload-section-active').style.display = '';
+
   setState('Encrypting and uploading file...');
   // print(file.type);
 
@@ -311,6 +360,36 @@ void encryptAndUpload(
   final link =
       '${window.location.protocol}//${window.location.host}${window.location.pathname}#b-$skylink+$secret';
 
+  querySelector('.upload-section-active').style.display = 'none';
+  querySelector('#upload-instruction').style.display = 'none';
+
+  querySelector('.upload-section-done').style.display = '';
+
+  querySelector('#upload-filename').setInnerHtml('${file.name}');
+
+  querySelector('#upload-link').setInnerHtml('${link}');
+
+  querySelector('#copy-btn').onClick.listen((event) {
+    InputElement tempInput = document.createElement("input");
+    tempInput.value = link;
+    document.body.append(tempInput);
+    tempInput.select();
+    document.execCommand("copy");
+    tempInput.remove();
+
+    return;
+
+    print('copy');
+    final InputElement copyText = document.getElementById('copy-input');
+
+    copyText.value = link;
+
+    copyText.select();
+    copyText.setSelectionRange(0, 99999);
+
+    document.execCommand('copy');
+  });
+
   setState('Secure Download Link for ${file.name}: <a href="$link">$link</a>');
 }
 
@@ -325,8 +404,7 @@ Future<List<String>> uploadChunkedStreamToSkynet(
   final uploaderFileId = Uuid().v4();
   print('send $uploaderFileId');
 
-  setState(
-      'Encrypting and uploading first chunk... $totalChunks Chunks total (16 MB each)');
+  setState('Encrypting and uploading file... (1/$totalChunks Chunks)');
 
   List<String> skylinks = List.generate(totalChunks, (index) => null);
 
@@ -349,8 +427,10 @@ Future<List<String>> uploadChunkedStreamToSkynet(
 
     skylinks[currentI] = skylink;
     i++;
-    setState(
-        'Encrypting and uploading file... $i/$totalChunks Chunks uploaded (16 MB each)');
+
+    setState('Encrypting and uploading file... ($i/$totalChunks Chunks)');
+/*     setState(
+        'Encrypting and uploading file... $i/$totalChunks Chunks uploaded (16 MB each)'); */
   }
 
   int internalI = 0;
