@@ -15,6 +15,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.40.4"
+  ansicolor:
+    dependency: "direct main"
+    description:
+      name: ansicolor
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.5"
   archive:
     dependency: transitive
     description:
@@ -23,7 +30,7 @@ packages:
     source: hosted
     version: "2.0.13"
   args:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: args
       url: "https://pub.dartlang.org"
@@ -276,6 +283,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.9.7"
+  mime_type:
+    dependency: "direct main"
+    description:
+      name: mime_type
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.2"
   node_interop:
     dependency: transitive
     description:
@@ -298,7 +312,7 @@ packages:
     source: hosted
     version: "1.9.3"
   path:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: path
       url: "https://pub.dartlang.org"
