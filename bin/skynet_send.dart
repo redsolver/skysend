@@ -128,7 +128,7 @@ void main(List<String> args) async {
 }
 
 void exitWithHelp() {
-  print(greenBold('Skynet Send CLI v1.1'));
+  print(greenBold('Skynet Send CLI v3.1'));
 
   print('');
 
