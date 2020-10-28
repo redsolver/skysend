@@ -242,7 +242,19 @@ void encryptAndUpload(
     nonce: nonce,
   );
 
-  final skylink = await task.uploadFileToSkynet(links);
+  String skylink;
+
+  while (skylink == null) {
+    try {
+      skylink = await task.uploadFileToSkynet(links);
+
+      if ((skylink ?? '').isEmpty) throw Exception('oops');
+    } catch (e, st) {
+      print(e);
+      print(st);
+      print('retry');
+    }
+  }
 
   // Encrypt
 

@@ -11,9 +11,9 @@ jobs:
         os: [ubuntu-latest, windows-latest, macOS-latest]
         include:
           - os: ubuntu-latest
-            output-name: skysend-linux
+            output-name: skysend-linux.bin
           - os: macOS-latest
-            output-name: skysend-mac
+            output-name: skysend-mac.bin
           - os: windows-latest
             output-name: skysend-windows.exe
 

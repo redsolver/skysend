@@ -37,7 +37,7 @@ class DownloadTask {
 
     chunkIndex = json.decode(utf8.decode(decryptedChunkIndex));
 
-   // print(chunkIndex);
+    // print(chunkIndex);
 
     metadata = chunkIndex['metadata'];
 
@@ -54,33 +54,59 @@ class DownloadTask {
 
   final chunkCtrl = StreamController<Uint8List>();
 
+  int totalChunks;
+
+  int iDone = 0;
+
   void downloadAndDecryptFile() async {
-   // print('onDownloadStart');
+    // print('onDownloadStart');
 
     int i = 0;
 
-    final int totalChunks = metadata['totalchunks'];
+    totalChunks = metadata['totalchunks'];
 
     //   querySelector('.upload-section-active').style.display = '';
 
     setDLState('Downloading and decrypting chunk 1 of $totalChunks...');
 
-    int iDone = 0;
-
     for (final chunkSkylink in chunkIndex['chunks']) {
       final currentI = i;
 
-     // print('dl $currentI');
+      // print('dl $currentI');
 
       final chunkNonce = Nonce(
           base64.decode(chunkIndex['chunkNonces'][(currentI + 1).toString()]));
 
-      http
-          .get(
-        '${SkynetConfig.dlPortal}/$chunkSkylink',
-      )
-          .then((chunkRes) async {
-      //  print('dcrypt $currentI');
+      downloadAndDecryptChunk(
+        chunkSkylink: chunkSkylink,
+        chunkNonce: chunkNonce,
+        currentI: currentI,
+      );
+
+      await Future.delayed(Duration(milliseconds: 100));
+
+      while (i > iDone + 4) {
+        await Future.delayed(Duration(milliseconds: 20));
+      }
+
+      i++;
+    }
+
+    return;
+  }
+
+  void downloadAndDecryptChunk({
+    String chunkSkylink,
+    Nonce chunkNonce,
+    final int currentI,
+  }) async {
+    while (true) {
+      try {
+        final chunkRes = await http.get(
+          '${SkynetConfig.dlPortal}/$chunkSkylink',
+        );
+
+        //  print('dcrypt $currentI');
 
         final decryptedChunk = await cipher.decrypt(
           chunkRes.bodyBytes,
@@ -91,7 +117,7 @@ class DownloadTask {
         while (chunksLength < currentI) {
           await Future.delayed(Duration(milliseconds: 20));
         }
-      //  print('done $currentI');
+        //  print('done $currentI');
 
         chunkCtrl.add(decryptedChunk);
         chunksLength++;
@@ -104,17 +130,14 @@ class DownloadTask {
               'Downloading and decrypting chunk ${currentI + 2} of $totalChunks...');
         }
         iDone++;
-      });
 
-      await Future.delayed(Duration(milliseconds: 100));
-
-      while (i > iDone + 4) {
-        await Future.delayed(Duration(milliseconds: 20));
+        return;
+      } catch (e, st) {
+        print(e);
+        print(st);
+        print('retrying in 3 seconds...');
+        await Future.delayed(Duration(seconds: 3));
       }
-
-      i++;
     }
-
-    return;
   }
 }
