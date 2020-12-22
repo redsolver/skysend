@@ -14,7 +14,7 @@ void main(List<String> args) async {
   final command = args.first;
 
   if (['download', 'dl', 'd', 'down'].contains(command)) {
-    print('Using portal ${SkynetConfig.dlPortal}');
+    print('Using portal ${SkynetConfig.portal}');
     print('Downloading metadata...');
 
     String hash = args[1];
@@ -128,12 +128,12 @@ void main(List<String> args) async {
 }
 
 void exitWithHelp() {
-  print(greenBold('Skynet Send CLI v3.1'));
+  print(greenBold('SkySend CLI v3.2'));
 
   print('');
 
   print(magenta('skysend upload') + ' path/to/file');
-  print(magenta('skysend download') + ' https://skynet-send...');
+  print(magenta('skysend download') + ' https://skysend.hns...');
 
   print('');
   print(

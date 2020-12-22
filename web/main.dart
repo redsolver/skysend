@@ -5,6 +5,7 @@ import 'dart:math';
 import 'dart:typed_data';
 import 'package:cryptography/cryptography.dart';
 import 'package:filesize/filesize.dart';
+import 'package:skynet_send/config.dart';
 
 import 'package:skynet_send/const.dart';
 import 'package:skynet_send/download.dart';
@@ -14,6 +15,9 @@ import 'package:uuid/uuid.dart';
 
 void main() async {
   /*  try { */
+  SkynetConfig.portal = getCurrentPortal();
+  print('Using portal ${SkynetConfig.portal}');
+
   String hash = window.location.hash;
 
   if (hash.startsWith('#')) {
@@ -135,6 +139,21 @@ void main() async {
       file,
     );
   });
+}
+
+String getCurrentPortal() {
+  String portal = window.location.hostname;
+
+  if (portal == 'localhost') portal = 'siasky.net';
+
+  if (portal.contains('.hns.')) {
+    portal = portal.split('.hns.')[1];
+  }
+
+  if (portal.split('.').length == 3) {
+    portal = portal.substring(portal.split('.').first.length + 1);
+  }
+  return portal;
 }
 
 Stream<List<int>> getStreamOfFile(File file) async* {

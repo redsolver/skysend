@@ -1,3 +1,3 @@
 class SkynetConfig {
-  static String dlPortal = 'https://siasky.net';
+  static String portal = 'siasky.net';
 }

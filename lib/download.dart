@@ -19,7 +19,7 @@ class DownloadTask {
     String skylink,
     String key,
   ) async {
-    final res = await http.get('${SkynetConfig.dlPortal}/$skylink');
+    final res = await http.get('https://${SkynetConfig.portal}/$skylink');
 
     final cryptParts = base64.decode(key);
 
@@ -103,7 +103,7 @@ class DownloadTask {
     while (true) {
       try {
         final chunkRes = await http.get(
-          '${SkynetConfig.dlPortal}/$chunkSkylink',
+          'https://${SkynetConfig.portal}/$chunkSkylink',
         );
 
         //  print('dcrypt $currentI');

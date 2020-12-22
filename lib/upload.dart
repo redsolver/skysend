@@ -7,6 +7,7 @@ import 'package:path/path.dart' as p;
 
 import 'package:mime_type/mime_type.dart';
 import 'package:skynet_send/ansi_pens.dart';
+import 'package:skynet_send/config.dart';
 import 'package:skynet_send/encrypt_block_stream.dart';
 
 import 'const.dart';
@@ -14,7 +15,7 @@ import 'const.dart';
 void startEncryptAndUpload(
   File file,
 ) async {
-  print('Upload portals: ${publicPortals}');
+  print('Using portal ${SkynetConfig.portal}');
 
   print('Encrypting and uploading file...');
   // print(file.type);
@@ -92,7 +93,7 @@ void startEncryptAndUpload(
   final secret =
       base64.encode([...(await secretKey.extract()), ...nonce.bytes]);
 
-  final link = 'https://skynet-send.hns.siasky.net/#b-$skylink+$secret';
+  final link = 'https://skysend.hns.${SkynetConfig.portal}/#b-$skylink+$secret';
 
   print('Secure Download Link for ${greenBold(metadata['filename'])}: $link');
 }

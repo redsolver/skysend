@@ -5,22 +5,24 @@ import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
 import 'package:cryptography/cryptography.dart';
+import 'package:skynet_send/config.dart';
 import 'package:skynet_send/const.dart';
 import 'package:uuid/uuid.dart';
 import 'package:http_parser/http_parser.dart';
 
-List<String> publicPortals = [
+// String usedPortal = 'siasky.net';
+/* List<String> publicPortals = [
   'https://siasky.net', // FAST and CORS
   'https://skyportal.xyz', // FAST and CORS
   // 'https://sialoop.net',// NO CORS
   // 'https://skydrain.net', // SLOW
   // 'https://siacdn.com',// NO CORS
   'https://skynethub.io', // FAST and CORS
-];
+]; */
 
-String getRandomPortal() {
+/* String getRandomPortal() {
   return publicPortals[Random().nextInt(publicPortals.length)];
-}
+} */
 
 class EncryptionUploadTask {
   int i = 0;
@@ -136,7 +138,7 @@ class EncryptionUploadTask {
   Future<String> uploadFileToSkynet(List<int> chunk) async {
     var byteStream = new http.ByteStream.fromBytes(chunk);
 
-    var uri = Uri.parse(getRandomPortal() + '/skynet/skyfile');
+    var uri = Uri.parse('https://${SkynetConfig.portal}/skynet/skyfile');
 
     //   print(uri);
 
