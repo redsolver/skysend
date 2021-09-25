@@ -1,5 +1,7 @@
 # SkySend
 
+[![Add to Homescreen](https://siasky.net/CADKZ7bTyVRjMmyMnEsUKDidqdmdaNHaJP25cp_3YGQlkg)](https://homescreen.hns.siasky.net/#/skylink/AQDikuO5szw9nTHZvvm0jT_iwRIJ74UqyvReNwHePAkqBQ)
+
 Simple, end-to-end encrypted file-sharing on Skynet
 
 It basically works like Firefox Send. You select a file, it gets encrypted locally and then uploaded to Skynet. Then you get a link which can be shared and contains the decryption key.
